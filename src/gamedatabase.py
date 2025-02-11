@@ -1,8 +1,9 @@
 import pickle
 import os
+import sys
 
 class GameSaver:
-    # This class deals with saving and loading the game to and from a pickle file.
+    # This class deals with saving and loading the game to and from a pickle file
     def __init__(self, save_file="pickle/gamesave.pkl"):
         self.save_file = save_file
 
@@ -34,3 +35,9 @@ class GameSaver:
             game.print_environment_frame() 
         else:
             print("No saved game found!") 
+
+if os.path.basename(sys.argv[0]) != "playgame.py":
+    script_path = os.path.join(os.path.dirname(__file__), "playgame.py")
+    print(f"Wrong file executed! Running '{script_path}' instead...")
+    os.system(f'python "{script_path}"')
+    sys.exit()

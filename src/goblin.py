@@ -1,12 +1,13 @@
 import random
 from getch1 import *
+import sys
 
 class Goblin:
-    # The Goblin class defines the different Goblin types and their corresponding abilities.
+    # The Goblin class defines the different Goblin types and their corresponding abilities
     def __init__(self):
         self.coordX = None
         self.coordY = None
-        self.encountered = False # If the Goblin has been encountered, it's removed from the game.
+        self.encountered = False # If the Goblin has been encountered, it's removed from the game
 
     def spawn_goblin(self, environment):
         # Spawn Goblin at a random point in the maze
@@ -16,12 +17,11 @@ class Goblin:
                 if environment[x][y] == 0:
                     self.possible_spawns.append((x, y))
         self.random_spawn = random.choice(self.possible_spawns)
-
         self.coordX = self.random_spawn[0]
         self.coordY = self.random_spawn[1]
 
 class Wealth_Goblin(Goblin):
-    # The Wealth Goblin can give coins to the Hero based on the game difficulty.
+    # The Wealth Goblin can give coins to the Hero based on the game difficulty
     def __init__(self):
         super().__init__()
         self.name = "Wealth"
@@ -36,11 +36,10 @@ class Wealth_Goblin(Goblin):
         # Calculating how much coins to award.
         coins_awarded = 10 * difficulty
         success_rate = 0.2 / difficulty
-
-        return coins_awarded, success_rate
+        return round(coins_awarded), round(success_rate)
 
 class Health_Goblin(Goblin):
-    # The Health Goblin can heal the Hero based on the game difficulty.
+    # The Health Goblin can heal the Hero based on the game difficulty
     def __init__(self):
         super().__init__()
         self.name = "Health"
@@ -55,11 +54,10 @@ class Health_Goblin(Goblin):
         # Calculating how much to heal.
         health_recovered = 10 * difficulty
         success_rate = 0.2 / difficulty
-
-        return health_recovered, success_rate
+        return round(health_recovered), round(success_rate)
 
 class Gamer_Goblin(Goblin):
-    # The Gamer Goblin gives coins to the Hero, as well as heal them, based on the game difficulty.
+    # The Gamer Goblin gives coins to the Hero, as well as heal them, based on the game difficulty
     def __init__(self):
         super().__init__()
         self.name = "Gamer"
@@ -71,8 +69,13 @@ class Gamer_Goblin(Goblin):
         super().spawn_goblin(environment)
 
     def rps(self, difficulty=1):
-        # The Hero gets the rewards only if they win a game of Rock, Paper, Scissors.
+        # The Hero gets the rewards only if they win a game of Rock, Paper, Scissors
         coins_awarded = 20 / difficulty
-        health_recovered = 20 / difficulty
-        
-        return coins_awarded, health_recovered
+        health_recovered = 20 / difficulty    
+        return round(coins_awarded), round(health_recovered)
+    
+if os.path.basename(sys.argv[0]) != "playgame.py":
+    script_path = os.path.join(os.path.dirname(__file__), "playgame.py")
+    print(f"Wrong file executed! Running '{script_path}' instead...")
+    os.system(f'python "{script_path}"')
+    sys.exit()

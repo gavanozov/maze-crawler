@@ -21,9 +21,8 @@ MEDIUM = 1.5
 HARD = 2
 VERY_HARD = 2.5
 
-
 class Environment:
-    """Environment includes Maze+Monster+Goblin"""
+    # Environment includes Maze + Monster + Goblin
     def __init__(self, maze):
         self.environment = deepcopy(maze)
 
@@ -33,9 +32,8 @@ class Environment:
     def get_coord(self, x, y):
         return self.environment[x][y]
 
-
     def print_environment(self):
-        """print out the environment in the terminal"""
+        # Print out the environment in the terminal
         for row in self.environment:
             row_str = str(row)
             row_str = row_str.replace("1", WALL_CHAR)  # replace the wall character
@@ -48,7 +46,6 @@ class Environment:
             row_str = row_str.replace("7", GOBLIN_CHAR) # replace the health goblin
             row_str = row_str.replace("8", GOBLIN_CHAR) # replace the gamer goblin
             print("".join(row_str))
-
 
 class Game:
 
@@ -118,17 +115,16 @@ class Game:
                 self.maze[goblin.coordX][goblin.coordY] = 8
 
     def check_win_condition(self):
-        for monster in self.monsters:
-            if monster.encountered == False:
-                return False
-        return True
+        if self.myHero.health > 0:
+            for monster in self.monsters:
+                if monster.encountered == False:
+                    return False
+            return True
     
     def check_lose_condition(self):
         return self.myHero.health <= 0
 
-    
     def display_locations(self):
-
         # Prints the coordinates of the hero
         print("")
         print("=============================HERO==============================")
@@ -148,7 +144,6 @@ class Game:
         print("")
 
         # Prints the coordinates and the ability of all goblins, currently in the maze
-
         print("===========================GOBLINS=============================")
         print(f"There are {len(self.goblins)} goblins left to encounter:")
         for goblin in self.goblins:
@@ -227,9 +222,7 @@ class Game:
                 print("===================================================")
                 self.MyEnvironment.print_environment()
                 self.count += 1
-                self.print_environment_frame()
-                
-                
+                self.print_environment_frame()          
 
             if self.check_win_condition():
                 input("All monsters have been defeated. YOU WIN!")
@@ -244,14 +237,14 @@ class Game:
 
     def print_environment_frame(self):
         print("===================================================", self._count)
-        print("Health: ", self.myHero.health, " Coins: ", self.myHero.coins, end = "   ||   ")
+        print("Health: ", round(self.myHero.health), " Coins: ", round(self.myHero.coins), end = "   ||   ")
         print("Press h for HELP!")
         print("===================================================")
                           
 
 if __name__ == "__main__":
     os.system('cls')
-    # The beginning screen of the game which lets the player choosel
+    # The beginning screen of the game which lets the player choose
     # whether to start a new game or load a previous game
     print("========================MAZE=CRAWLER========================")
     print("")
@@ -289,8 +282,4 @@ if __name__ == "__main__":
             print("No saved game found. Starting a lnew game.")
             myGame = Game("EASY")
             myGame.play()
-
-
-    #myGame = Game("EASY")
-    #myGame.play()
     

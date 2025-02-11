@@ -1,29 +1,24 @@
-#  Author: CS1527 Course Team
-#  Date: 9 January 2020
-#  Version: 1.0
-
 import random
 from getch1 import *
+import sys
 
 class Monster:
-    """define your monster class here"""
+    # The Monster class defines the different Monster types and their corresponding abilities
     def __init__(self):
         self.coordX = None
         self.coordY = None
         self.encountered = False
 
     def spawn_monster(self, environment):
-        # Spawn monster at a random point in the maze
+        # Spawn Monster at a random point in the maze
         self.possible_spawns = []
         for x in range(17):
             for y in range(17):
                 if environment[x][y] == 0:
                     self.possible_spawns.append((x, y))
         self.random_spawn = random.choice(self.possible_spawns)
-
         self.coordX = self.random_spawn[0]
         self.coordY = self.random_spawn[1]
-        #return Monster(random.randint(1, 3))
 
     def monster_type_check(self, monster):
         if monster.name == "Thief":
@@ -36,11 +31,12 @@ class Monster:
             return 3 # fix
 
     def reset_monster(self, monster, environment):
+        # Monsters need to be reset every turn as they don't disappear even after interacting with the Hero
         monster_type = self.monster_type_check(monster)
         environment.set_coord(monster.coordX, monster.coordY, monster_type)
 
 class Thief_Monster(Monster):
-    
+    # The Thief Monster can steal coins from the Hero based on the game difficulty
     def __init__(self):
         super().__init__()
         self.name = "Thief"
@@ -58,17 +54,13 @@ class Thief_Monster(Monster):
         return super().reset_monster(monster, environment)
 
     def steal(self, difficulty=1):
-        
+        # Calculating how many coins to steal
         stolen_amount = 10 * difficulty
         success_rate = 0.2 * difficulty
-
-        return stolen_amount, success_rate
+        return round(stolen_amount), round(success_rate)
         
-
-
-
 class Fighter_Monster(Monster):
-    
+    # The Fighter Monster can deal damage to the Hero based on the game difficulty
     def __init__(self):
         super().__init__()
         self.name = "Fighter"
@@ -86,15 +78,13 @@ class Fighter_Monster(Monster):
         return super().reset_monster(monster, environment)
 
     def fight(self, difficulty=1):
-        
+        # Calculating how much damage to deal
         damage_dealt = 10 * difficulty
         success_rate = 0.2 * difficulty
-
-        return damage_dealt, success_rate
-
+        return round(damage_dealt), round(success_rate)
 
 class Gamer_Monster(Monster):
-    
+    # The Gamer Monster can steal coins from the Hero, as well as deal damage based on the game difficulty
     def __init__(self):
         super().__init__()
         self.name = "Gamer"
@@ -112,12 +102,13 @@ class Gamer_Monster(Monster):
         return super().reset_monster(monster, environment)
 
     def rps(self, difficulty=1):
-
+        # The Hero loses health and coins only after losing to a game of Rock Paper Scissors
         stolen_amount = 10 * difficulty
         damage_dealt = 10 * difficulty
+        return round(stolen_amount), round(damage_dealt)
 
-        return stolen_amount, damage_dealt
-
-
-
-
+if os.path.basename(sys.argv[0]) != "playgame.py":
+    script_path = os.path.join(os.path.dirname(__file__), "playgame.py")
+    print(f"Wrong file executed! Running '{script_path}' instead...")
+    os.system(f'python "{script_path}"')
+    sys.exit()

@@ -1,11 +1,7 @@
 # This code is based on http://arcade.academy/examples/maze_recursive.html
-#
-# Modified by CS1527 Course Team on 30 January 2019
-#
-#
-
 import random
-
+import os
+import sys
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 700
@@ -13,14 +9,14 @@ SCREEN_HEIGHT = 700
 TILE_EMPTY = 0
 TILE_CRATE = 1
 
-# Maze must have an ODD number of rows and columns.
+# Maze must have an ODD number of rows and columns
 # Walls go on EVEN rows/columns.
 # Openings go on ODD rows/columns
 MAZE_HEIGHT = 51
 MAZE_WIDTH = 51
 
 def create_empty_grid(width, height, default_value=TILE_EMPTY):
-    """ Create an empty grid. """
+    # Create an empty grid
     grid = []
     for row in range(height):
         grid.append([])
@@ -28,20 +24,16 @@ def create_empty_grid(width, height, default_value=TILE_EMPTY):
             grid[row].append(default_value)
     return grid
 
-
 def create_outside_walls(maze):
-    """ Create outside border walls."""
 
     # Create left and right walls
     for row in range(len(maze)):
         maze[row][0] = TILE_CRATE
         maze[row][len(maze[row]) - 1] = TILE_CRATE
-
     # Create top and bottom walls
     for column in range(1, len(maze[0]) - 1):
         maze[0][column] = TILE_CRATE
         maze[len(maze) - 1][column] = TILE_CRATE
-
 
 def make_maze_recursive_call(maze, top, bottom, left, right):
     """
@@ -70,8 +62,8 @@ def make_maze_recursive_call(maze, top, bottom, left, right):
     for row in range(bottom + 1, top):
         maze[row][x] = TILE_CRATE
 
-    # Now we'll make a gap on 3 of the 4 walls.
-    # Figure out which wall does NOT get a gap.
+    # Now we'll make a gap on 3 of the 4 walls
+    # Figure out which wall does NOT get a gap
     wall = random.randrange(4)
     if wall != 0:
         gap = random.randrange(left + 1, x, 2)
@@ -89,7 +81,7 @@ def make_maze_recursive_call(maze, top, bottom, left, right):
         gap = random.randrange(y + 1, top, 2)
         maze[gap][x] = TILE_EMPTY
 
-    # If there's enough space, to a recursive call.
+    # If there's enough space, to a recursive call
     if top > y + 3 and x > left + 3:
         make_maze_recursive_call(maze, top, y, left, x)
 
@@ -104,7 +96,7 @@ def make_maze_recursive_call(maze, top, bottom, left, right):
 
 
 def make_maze_recursion(maze_width, maze_height):
-    """ Make the maze by recursively splitting it into four rooms. """
+    # Make the maze by recursively splitting it into four rooms
     maze = create_empty_grid(maze_width, maze_height)
     # Fill in the outside walls
     create_outside_walls(maze)
@@ -115,7 +107,7 @@ def make_maze_recursion(maze_width, maze_height):
 
 
 def print_maze(maze, wall="#", space="-"):
-    """print out the maze in the terminal"""
+    # Print out the maze in the terminal
     for row in maze:
         row_str = str(row)
         row_str = row_str.replace("1", wall)  # replace the wall character
@@ -125,9 +117,13 @@ def print_maze(maze, wall="#", space="-"):
 def print_maze_hero_monster():
     return
 
-if __name__ == "__main__":
-    maze=make_maze_recursion(17, 17)
-    print_maze(maze, "#", "-")
-    print(maze,"#", "-")
+#if __name__ == "__main__":
+#    maze=make_maze_recursion(17, 17)
+#    print_maze(maze, "#", "-")
+#    print(maze,"#", "-")
 
-
+if os.path.basename(sys.argv[0]) != "playgame.py":
+    script_path = os.path.join(os.path.dirname(__file__), "playgame.py")
+    print(f"Wrong file executed! Running '{script_path}' instead...")
+    os.system(f'python "{script_path}"')
+    sys.exit()
