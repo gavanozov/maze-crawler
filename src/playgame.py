@@ -49,16 +49,16 @@ class Environment:
 
 class Game:
 
-    _count = 0
+    _count = 0 # Keep count of the current turn
 
     def __init__(self, difficulty, load_data=None):
-        self.gamesaver = GameSaver()
+        self.gamesaver = GameSaver() # The Game Saver Class deals with saving and loading the game
 
         if load_data:
             self.__dict__.update(load_data) # Restore saved attributes
         else:
             self.difficulty = difficulty
-            self.maze = make_maze_recursion(17, 17)
+            self.maze = make_maze_recursion(17, 17) # Initialise the random maze
             self.monsters = []
             self.goblins = []
             self.myHero = Hero(self.difficulty)
@@ -71,18 +71,18 @@ class Game:
             self.leaderboard = Leaderboard()
 
     def spawn_monsters(self, number):
-
+        # Populate the maze with monsters
         monster_types = (Thief_Monster, Fighter_Monster, Gamer_Monster)
-
+        # Initially spawn one of each type
         self.monsters.append(Thief_Monster())
         self.monsters.append(Fighter_Monster())
         self.monsters.append(Gamer_Monster())
-
+        # Then spawn more monsters with random types
         if number > 3:
             for _ in range(number - 3):
                 random_type = random.choice(monster_types)
                 self.monsters.append(random_type())
-
+        # Place the mosnters in the maze
         for monster in self.monsters:
             Monster.spawn_monster(monster, self.maze)
             if monster.name == "Thief":
@@ -93,18 +93,18 @@ class Game:
                 self.maze[monster.coordX][monster.coordY] = 5
 
     def spawn_goblins(self, number):
-
+        # Populate the maze with goblins
         goblin_types = (Wealth_Goblin, Health_Goblin, Gamer_Goblin)
-
+        # Initially spawn one of each type
         self.goblins.append(Wealth_Goblin())
         self.goblins.append(Health_Goblin())
         self.goblins.append(Gamer_Goblin())
-
+        # Then spawn more monsters with random types
         if number > 3:
             for _ in range(number - 3):
                 random_type = random.choice(goblin_types)
                 self.goblins.append(random_type())
-
+        # Place the mosnters in the maze
         for goblin in self.goblins:
             Goblin.spawn_goblin(goblin, self.maze)
             if goblin.name == "Wealth":
@@ -115,6 +115,8 @@ class Game:
                 self.maze[goblin.coordX][goblin.coordY] = 8
 
     def check_win_condition(self):
+        # If the Hero has encountered all monsters and has health left,
+        # they win the game
         if self.myHero.health > 0:
             for monster in self.monsters:
                 if monster.encountered == False:
@@ -122,6 +124,7 @@ class Game:
             return True
     
     def check_lose_condition(self):
+        # If the Hero's health reaches 0, they lose the game
         return self.myHero.health <= 0
 
     def display_locations(self):
@@ -174,11 +177,10 @@ class Game:
         print("===================================================")
         self.MyEnvironment.print_environment()
         self.print_environment_frame()
-        
 
         while True:
 
-            ch2 = getch()
+            ch2 = getch() # Capture keyboard input
 
             if ch2 == b'h':
                 # Prints the game manual with all the controls when you press h
@@ -187,14 +189,24 @@ class Game:
                       "RIGHT arrow key == go right \n" +
                       "UP arrow key == go up \n" +
                       "DOWN arrow key == go down\n")
+                print("======MONSTER=(X,=Y)=ABILITIES=======")
+                print("Thief == Y % chance to steal X coins\n" +
+                      "Fighter == Y % chance to deal X damage\n" +
+                      "Gamer == steal X amount of coins\n" +
+                      "and deals Y amount of damage\n")
+                print("======Goblin=(X,=Y)=ABILITIES=======")
+                print("Wealth == Y % chance to award X coins\n" +
+                      "Fighter == Y % chance to heal X health\n" +
+                      "Gamer == award X amount of coins\n" +
+                      "and heals Y amount of health\n")
                 print("=========ROCK=PAPER=SCISSORS=========")
                 print("R key == choose ROCK \n" +
                       "P key == choose PAPER \n" +
                       "X key == choose SCISSORS \n")
                 print("============MISCELLANEOUS============")
-                print("M key == display the location of the characters")
-                print("Y key == display the leaderboard for the current difficulty")
-                print("================SYSTEM===============\n")
+                print("M key == display locations")
+                print("Y key == display the leaderboard\n")
+                print("================SYSTEM===============")
                 print("S key == save your game")
                 print("L key == load game from saved file")
                 print("Q key == quit the game")
@@ -218,7 +230,6 @@ class Game:
 
             if self.myHero.move(self.MyEnvironment, self.monsters, self.goblins):
                 os.system('cls')
-                #if self.myHero.move_debug(self.MyEnvironment):  #this works in debug mode
                 print("===================================================")
                 self.MyEnvironment.print_environment()
                 self.count += 1
@@ -240,7 +251,6 @@ class Game:
         print("Health: ", round(self.myHero.health), " Coins: ", round(self.myHero.coins), end = "   ||   ")
         print("Press h for HELP!")
         print("===================================================")
-                          
 
 if __name__ == "__main__":
     os.system('cls')

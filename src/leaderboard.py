@@ -61,6 +61,8 @@ class Leaderboard:
         # Update and save leaderboard
         self.leaderboard[difficulty] = scores
         self.save_leaderboard()  
+        self.print_leaderboard(difficulty)
+        input("")
         
     def print_leaderboard(self, difficulty):
         if difficulty not in self.leaderboard:
